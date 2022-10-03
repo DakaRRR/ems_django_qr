@@ -7,9 +7,13 @@
 
 ## Built With
 
-*[![My Skills](https://skills.thijs.gg/icons?i=python&theme=dark)](https://skills.thijs.gg)
-*[![My Skills](https://skills.thijs.gg/icons?i=djangol&theme=dark)](https://skills.thijs.gg)
-*[![My Skills](https://skills.thijs.gg/icons?i=postgresql&theme=dark)](https://skills.thijs.gg)
+[![My Skills](https://skills.thijs.gg/icons?i=python&theme=dark)](https://skills.thijs.gg)
+<br>
+[![My Skills](https://skills.thijs.gg/icons?i=django&theme=dark)](https://skills.thijs.gg)\
+<br>
+[![My Skills](https://skills.thijs.gg/icons?i=postgresql&theme=dark)](https://skills.thijs.gg)
+<br>
+
 ## Справочник
 У компании есть свои подразделения, которые как и все последующие данные выбираются при добавлении сотрудника. 
 
