@@ -5,7 +5,7 @@
 Система менеджмента сотрдуников для выставления их данных, должности, статуса, подразделения и дальнейшего генирования qr кода(с ссылкой на их профиль). 
   ![image](https://user-images.githubusercontent.com/82327788/193603342-dadba70f-e6ba-485c-8b61-1b12c82a1184.png)
 
-## Написан на 
+## Построено с
 
 [![My Skills](https://skills.thijs.gg/icons?i=python,django,postgresql,html,css,js&theme=dark)](https://skills.thijs.gg)
 
