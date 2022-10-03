@@ -3,18 +3,11 @@
 ## О проекте
 
 Система менеджмента сотрдуников для выставления их данных, должности, статуса, подразделения и дальнейшего генирования qr кода(с ссылкой на их профиль). 
-Стек: Python, Django, PostgreSQL.
   ![image](https://user-images.githubusercontent.com/82327788/193603342-dadba70f-e6ba-485c-8b61-1b12c82a1184.png)
-### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+### Built With
+[issues]: https://github.com/github/linguist/issues
+[new-issue]: https://github.com/github/linguist/issues/new
 
 
 ## Справочник
