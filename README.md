@@ -26,7 +26,9 @@
 
 
 Сотрудники отоброжаются по индексам их филиалов и должности.
-![image](https://user-images.githubusercontent.com/82327788/193607938-c5e8c89b-28f9-4995-afbc-bdb9d9553dc8.png)
+<div align="center"> 
+  <img src="https://user-images.githubusercontent.com/82327788/193607938-c5e8c89b-28f9-4995-afbc-bdb9d9553dc8.png" alt="screenshot" />
+</div>
 <br>
 У каждого подразделения отдельный список сотрудников
 
