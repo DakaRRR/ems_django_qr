@@ -6,9 +6,8 @@
   ![image](https://user-images.githubusercontent.com/82327788/193603342-dadba70f-e6ba-485c-8b61-1b12c82a1184.png)
 
 ### Built With
-[issues]: https://github.com/github/linguist/issues
-[new-issue]: https://github.com/github/linguist/issues/new
 
+[![My Skills](https://skills.thijs.gg/icons?i=java,kotlin,nodejs,figma&theme=light)](https://skills.thijs.gg)
 
 ## Справочник
 У компании есть свои подразделения, которые как и все последующие данные выбираются при добавлении сотрудника. 
