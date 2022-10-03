@@ -1,0 +1,144 @@
+{% extends "employee_information/base.html" %} {% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            {% if user.is_superuser or user.is_mainHR %}
+                <h4 class="card-title mb-0">{{ page_title }}</h4>
+            {% else %}
+                <h4 class="card-title mb-0">{{ page_title }}</h4>
+            {% endif %}
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" id="create_new"><i class="material-icons mdc-button__icon">add</i><span>Добавить</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="60%">
+                    <col width="10%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center py-1">ФИО</th>
+                        <th class="text-center py-1">Филиал</th>
+                        <th class="text-center py-1">Должность</th>
+                        <th class="text-center py-1">Статус</th>
+                        <th class="text-center py-1">Редактировать</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                        {% if user.department_id == employee.department_id or user.is_superuser or user.is_mainHR and employees != None %}
+                    <tr>
+                        <td class="px-2 py-1 text-start">{{ employee.lastname }} {{ employee.firstname }} {{ employee.middlename }} </td>
+                        <td class="px-2 py-1 text-start">{{ employee.get_department_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.get_position_name }}</td>
+                        <td class="px-2 py-1 text-start">{{ employee.get_status_name }}</td>
+                        <td class="px-2 py-1 text-center">
+                            <a class="mdc-button mdc-button--raised p-1 icon-button filled-button--info mdc-ripple-upgraded" href="{% url 'employee-details-page' employee.id %}" title="Данные">
+                                <i class="material-icons mdc-button__icon">visibility</i>
+                            </a>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded edit-data" type="button" data-id="{{ employee.pk }}" title="Изменить">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--danger mdc-ripple-upgraded delete-data" type="button" data-id="{{ employee.pk }}" title="Удалить">
+                                <i class="material-icons mdc-button__icon">deleteoutline</i>
+                            </button>
+
+                        </td>
+                    </tr>
+                            {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if employees.has_other_pages %}
+
+          <ul class="pagination justify-content-center">
+            {% if employees.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ employees.previous_page_number }}">Предыдущая</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            {% endif %}
+
+        {% if employees.number|add:'-4' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ employees.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in employees.paginator.page_range %}
+            {% if employees.number == i %}
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                    {{ i }}
+                    <span class="sr-only"></span>
+                  </span>
+                </li>
+            {% elif i == employees.paginator.num_pages or i == 1 %}
+            {% elif i > employees.number|add:'-10' and i < employees.number|add:'10' %}
+                 <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if employees.paginator.num_pages > employees.number|add:'10' %}
+           <li class="page-item"><a class="page-link" href="?page={{ employees.number|add:'5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if employees.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ employees.paginator.num_pages }}">{{ employees.paginator.num_pages }}</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ employees.next_page_number }}">Следующая</a></li>
+        {% endif %}
+        </ul>
+    {% endif %}
+    </div>
+
+</div>
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Добавить сотрудника", "{% url 'manage_employees-page' %}", 'modal-lg')
+        })
+        $('.edit-data').click(function() {
+            uni_modal("Изменить данные сотрудника", "{% url 'editor_employees-page' %}?id=" + $(this).attr('data-id'), 'modal-lg')
+        })
+        $('.delete-data').click(function() {
+            _conf("Вы уверены, что хотите удалить этого сотрудника?", "delete_employee", [$(this).attr('data-id')])
+        })
+    })
+
+    function delete_employee($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete-employee' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+
+</script>
+{% endblock ScriptBlock %}

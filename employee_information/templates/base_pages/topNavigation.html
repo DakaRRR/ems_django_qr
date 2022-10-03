@@ -1,0 +1,56 @@
+{% load static %}
+<!-- partial:partials/_navbar.html -->
+<header class="mdc-top-app-bar border-bottom shadow">
+    <div class="mdc-top-app-bar__row">
+        <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">menu</button>
+        </div>
+
+        <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
+            <form class="d-flex align-items-center" action="{% url 'employee-search-page' %}" method="post">
+                {% csrf_token %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Поиск" name="fullname" id="fullanme" >
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Поиск</button>
+          </form>
+            <div class="menu-button-container menu-profile d-none d-md-block">
+                <button class="mdc-button mdc-menu-button">
+                    <span class="d-flex align-items-center">
+                    <span class="figure">
+                        <img src="{% static 'employee_information/assets/material-admin/images/faces/ava.jpg' %}" alt="user" class="user">
+                    </span>
+                    <span class="user-name">{{ user.first_name }}</span>
+                    </span>
+                </button>
+                <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+                    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        {% if user.is_superuser %}
+                        <li class="mdc-list-item" role="menuitem">
+                            <div class="item-thumbnail item-thumbnail-icon-only">
+                                <i class="mdi mdi-settings-outline text-primary"></i>
+                            </div>
+                            <a href="{% url 'redirect-admin' %}">
+                                <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                                    <h6 class="item-subject font-weight-normal">Админ панель</h6>
+                                </div>
+                            </a>
+                        </li>
+
+
+                        {% endif %}
+                        <li class="mdc-list-item" role="menuitem">
+                            <div class="item-thumbnail item-thumbnail-icon-only">
+                                <i class="mdi mdi-logout text-primary"></i>
+                            </div>
+                            <a href="{% url 'logout' %}">
+                                <div class="item-content d-flex align-items-start flex-column justify-content-center">
+                                    <h6 class="item-subject font-weight-normal">Выйти</h6>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- partial -->

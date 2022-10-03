@@ -1,0 +1,102 @@
+{% load static %}
+{% load department_filter %}
+{% get_departments as departments %}
+<!-- partial:partials/_sidebar.html -->
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
+            element.addEventListener('click', function (e) {
+                let nextEl = element.nextElementSibling;
+                if(nextEl) {
+                    e.preventDefault();
+                    let mycollapse = new bootstrap.Collapse(nextEl);
+                    if(nextEl.classList.contains('show')){
+                    }
+                    else { mycollapse.show();
+            }
+        }
+    }); // addEventListener
+  }) // forEach
+});
+</script>
+<style>
+nav {
+}
+    .sidebar  {
+                    background: rgba(0,0,0,0);
+            border: 0px;
+        color: black;
+    }
+        .sidebar li .submenu{
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   padding-left: 1rem;
+   padding-right: 1rem;
+}
+           a[href].nav-link {
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        i {
+            margin: 7px;
+        }
+        a[href].nav-link:hover {
+            color: black;
+        }
+        a[href].nav-link:visited {
+            color: white;
+        }
+</style>
+<aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open" >
+   <div class="mdc-drawer__header border-bottom border-light" >
+      <a href="{% url 'home-page' %}" class="brand-logo">
+        <img src ="../static/employee_information/assets/material-admin/images/dashboard/logo.png" class="img-thumbnail">
+      </a>
+   </div>
+   <div class="mdc-drawer__content">
+      <div class="mdc-list-group">
+         <nav class="sidebar card py-md-5 w-90 p-2">
+            <ul class="nav flex-column" id="nav_accordion">
+               <li class="nav-item">
+                  <a class="nav-link" href="{% url 'home-page' %}"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i>Главная</a>
+               </li>
+                {% if user.is_superuser or user.is_mainHR %}
+               <li class="nav-item has-submenu ">
+                   <a class="nav-link mdc-drawer-link" href="#"> <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">group</i>Список сотрудников</a>
+                   <ul class="submenu collapse">
+                           <li><a class="nav-link" href="{% url 'employee-page' %}">Все подразделения</a></li>
+                          {% for department in departments %}
+                              <li><a class="nav-link" href="{% url 'employee-department-page' department.id %}">{{ department.name }}</a></li>
+                          {% endfor %}
+                  </ul>
+               </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'employee-page'%}"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">group</i>Список сотрудников</a>
+                        </li>
+               </li>
+                {% endif %}
+               <li class="nav-item has-submenu">
+                  <a class="nav-link" href="#"> <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true" style="color:white">book</i> Справочник </a>
+                  <ul class="submenu collapse py-md-5 p-0">
+                     <li>
+                         <a class="nav-link" href="{% url 'department-page' %}"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">business</i> Структура</a>
+                     </li>
+                     <li>
+                         <a class="nav-link" href="{% url 'position-page' %}"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">list</i> Список должностей </a>
+                     </li>
+                     <li>
+                         <a class="nav-link" href="{% url 'status-page' %}"><i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">done</i> Список статусов </a>
+                     </li>
+                  </ul>
+               </li>
+
+            </ul>
+        </nav>
+      </div>
+   </div>
+</aside>
+<!-- partial -->
+<!-- partial -->

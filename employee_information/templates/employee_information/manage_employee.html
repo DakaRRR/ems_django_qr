@@ -1,0 +1,138 @@
+<div class="container-fluid">
+    <form action="" id="employee-form" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{% if employee.pk %}{{employee.pk}}{% endif %}">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="form-group mb-3">
+                    <label for="firstname" class="control-label">Имя</label>
+                    <input type="text" name="firstname" id="firstname" class="form-control form-control-sm rounded-0" value="{{employee.firstname}}" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="middlename" class="control-label">Отчество</label>
+                    <input type="text" name="middlename" id="middlename" class="form-control form-control-sm rounded-0" value="{% if employee.middlename %}{{employee.middlename}}{% endif %}">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="lastname" class="control-label">Фамилия</label>
+                    <input type="text" name="lastname" id="lastname" class="form-control form-control-sm rounded-0" value="{{employee.lastname}}" required>
+                </div>
+
+
+                <div class="form-group mb-3">
+                    {% if employee.profile_image %}
+                        <img src="{{ employee.profile_image.url }}" alt="image here" class="img-thumbnail">
+                    {% endif %}
+                    <label for="profile_image" class="control-label">Загрузите фотографию</label>
+                    <input type="file" name="profile_image" id="profile_image" class="form-control form-control-sm rounded-0" accept="image/*"
+                           value="{% if employee.profile_image %}{{employee.profile_image}}{% endif %}" >
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="department_id" class="control-label">Подразделение</label>
+                        {% if not user.is_superuser and not user.is_mainHR %}
+                        <input type="" name="department_id" id="department_id" class="form-control form-control-sm rounded-0"  readonly value="{{user.department_id}}" required>
+                        {% else %}
+                        <select name="department_id" id="department_id" class="form-select form-select-sm rounded-0" required>
+                            <option value="" disabled selected>Выберите подразделение</option>
+                            {% for department in departments %}
+                                {% if employee.department_id and employee.department_id == department.id %}
+                                <option value="{{ department.id }}" selected>{{ department.name }}</option>
+                                {% else %}
+                                <option value="{{ department.id }}">{{ department.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+
+                        </select>
+                    {% endif %}
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="position_id" class="control-label">Должность</label>
+                        <select name="position_id" id="position_id" class="form-select form-select-sm rounded-0" required>
+                            <option value="" disabled selected>Выберите должность</option>
+                            {% for position in positions %}
+                                {% if employee.position_id and employee.position_id == position.id %}
+                                <option value="{{ position.id }}" selected>{{ position.name }}</option>
+                                {% else %}
+                                <option value="{{ position.id }}">{{ position.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                  <div class="form-group mb-3">
+                        <label for="status_id" class="control-label">Статус</label>
+                        <select name="status_id" id="status" class="form-select form-select-sm rounded-0" required>
+                            <option value="" disabled selected>Выберите статус</option>
+
+                            {% for status in statuses %}
+                                {% if employee.status_id and employee.status_id == status.id %}
+                                <option value="{{ status.id }}" selected>{{ status.name }}</option>
+                                {% else %}
+                                <option value="{{ status.id }}">{{ status.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+
+                        </select>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </form>
+
+</div>
+<script>
+   $(function() {
+        $('#employee-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+
+            start_loader();
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'save-employee-page' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                mimeType: "multipart/form-data",
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert_toast("An error occured", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.text(resp.msg)
+                    } else {
+                        el.text("An error occured", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>

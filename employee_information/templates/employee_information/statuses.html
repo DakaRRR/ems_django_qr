@@ -1,0 +1,89 @@
+{% extends "employee_information/base.html" %} {% block pageContent %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Список статусов</h4>
+            <div class="text-start">
+                <button class="mdc-button mdc-button--raised mdc-ripple-upgraded btn-sm" id="create_new"><i class="material-icons mdc-button__icon">add</i><span>Добавить</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <colgroup>
+                    <col width="70%">
+                    <col width="30%">
+                </colgroup>
+                <thead>
+                    <tr>
+
+                        <th class="text-center py-1">Название статуса</th>
+                        <th class="text-center py-1">Редактировать</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for status in statuses %}
+                    <tr>
+                        <td class="px-2 py-1 text-center">{{ status.name }}</td>
+
+                        <td class="px-2 py-1 text-right">
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--light mdc-ripple-upgraded edit-data" type="button" data-id="{{ status.pk }}" title="Изменить">
+                                <i class="material-icons mdc-button__icon">edit</i>
+                            </button>
+                            <button class="mdc-button mdc-button--raised p-1 icon-button filled-button--danger mdc-ripple-upgraded delete-data" type="button" data-id="{{ status.pk }}" title="Удалить">
+                                <i class="material-icons mdc-button__icon">deleteoutline</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %} {% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#create_new').click(function() {
+            uni_modal("Добавить новый статус", "{% url 'manage_statuses-page' %}")
+        })
+        $('.edit-data').click(function() {
+            uni_modal("Изменить статус", "{% url 'manage_statuses-page' %}?id=" + $(this).attr('data-id'))
+        })
+        $('.delete-data').click(function() {
+            _conf("Вы уверены что хотите удалить стаус?", "delete_status", [$(this).attr('data-id')])
+        })
+    })
+
+    function delete_status($id) {
+        start_loader();
+        $.ajax({
+            headers: {
+                "X-CSRFToken": '{{csrf_token}}'
+            },
+            url: "{% url 'delete-status' %}",
+            method: "POST",
+            data: {
+                id: $id
+            },
+            dataType: "json",
+            error: err => {
+                console.log(err)
+                alert_toast("An error occured.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (typeof resp == 'object' && resp.status == 'success') {
+                    location.reload();
+                } else {
+                    alert_toast("An error occured.", 'error');
+                    end_loader();
+                }
+            }
+        })
+    }
+</script>
+{% endblock ScriptBlock %}
