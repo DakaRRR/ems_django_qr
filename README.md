@@ -23,6 +23,8 @@
 Страница с данными сотрудника 
 ![image](https://user-images.githubusercontent.com/82327788/193604298-c0fd4653-ca96-49e7-b719-2cce543c1f5c.png)
 <br>
+
+
 Сотрудники отоброжаются по индексам их филиалов и должности.
 ![image](https://user-images.githubusercontent.com/82327788/193607938-c5e8c89b-28f9-4995-afbc-bdb9d9553dc8.png)
 <br>
