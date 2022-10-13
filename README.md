@@ -40,7 +40,7 @@
 
 1. Клонировать данный репозиторий 
    ```sh
-   git clone https://github.com/DakaRRR/gs_to_pgsql.git
+   git clone https://github.com/DakaRRR/ems_django_qr.git
    ```
 2. Зарузить библиотеки.
    ```sh
